@@ -1,8 +1,9 @@
+#Tienda Optativa
 - Version: 0.0.0
 - Descripcion
 - Stack: NodeJs, MongoDB, Node, Git, Docker, Docker-Compose, Postman, Docker compas
 
-##Actores 
+## Actores 
 1. Usuario logueado
 2. Usuario no logueado
 3. Administrador
