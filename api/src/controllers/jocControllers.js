@@ -1,4 +1,3 @@
-// src/controllers/jocController.js
 const jocService = require('../services/jocService');
 
 const crearJoc = async (req, res) => {
@@ -23,7 +22,7 @@ const obtenerJocs = async (req, res) => {
         const options = {
             page: req.query.page,
             limit: req.query.limit,
-            sort: req.query.sort // e.g. ?sort=-preu
+            sort: req.query.sort
         };
 
         const result = await jocService.getAllJocs(filter, options);
@@ -39,7 +38,7 @@ const obtenerJoc = async (req, res) => {
         if (!joc) return res.status(404).json({ status: 'error', message: 'Joc no trobat' });
         return res.json({ status: 'success', data: joc });
     } catch (err) {
-        // ejemplo: id malformado provoca CastError
+        
         return res.status(400).json({ status: 'error', message: err.message });
     }
 };
