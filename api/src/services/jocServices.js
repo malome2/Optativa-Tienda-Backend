@@ -1,4 +1,4 @@
-// src/services/jocService.js
+
 const Joc = require('../models/joc');
 
 const createJoc = async (data) => {
@@ -7,7 +7,7 @@ const createJoc = async (data) => {
 };
 
 const getAllJocs = async (filter = {}, options = {}) => {
-    // soporta paginación básica
+
     const page = parseInt(options.page, 10) || 1;
     const limit = parseInt(options.limit, 10) || 20;
     const skip = (page - 1) * limit;

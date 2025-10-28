@@ -1,7 +1,7 @@
 // src/routes/jocRoutes.js
 const express = require('express');
 const router = express.Router();
-const jocCtrl = require('../controllers/jocController');
+const jocCtrl = require('../controllers/jocControllers');
 
 router.post('/', jocCtrl.crearJoc);        // Crear un joc
 router.get('/', jocCtrl.obtenerJocs);      // Listar jocs (paginación/filtros)
