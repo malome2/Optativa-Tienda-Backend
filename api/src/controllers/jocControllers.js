@@ -1,4 +1,4 @@
-const jocService = require('../services/jocService');
+const jocService = require('../services/jocServices');
 
 const crearJoc = async (req, res) => {
     try {
