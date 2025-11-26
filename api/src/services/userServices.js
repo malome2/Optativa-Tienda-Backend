@@ -1,29 +1,28 @@
-
-const usuari = require('../models/usuari');
+const Usuari = require('../models/usuari');
 
 const createUser = async (data) => {
-    const user = new user(data);
+    const { email, contrasenya } = data;
+
+    if (!email || !contrasenya)
+        throw new Error('Email i contrasenya són obligatoris');
+
+    const existe = await Usuari.findOne({ email });
+    if (existe) throw new Error('Email ja en ús');
+
+    const user = new Usuari(data);
     return await user.save();
 };
 
+const getUserByEmail = async (email) => {
+    return await Usuari.findOne({ email });
+};
+
 const getUserById = async (id) => {
-    return await user.findById(id);
-};
-
-const updateUser = async (id, updateData) => {
-    return await user.findByIdAndUpdate(id, updateData, {
-        new: true,
-        runValidators: true
-    });
-};
-
-const deleteUser = async (id) => {
-    return await user.findByIdAndDelete(id);
+    return await Usuari.findById(id).select('-contrasenya');
 };
 
 module.exports = {
-    deleteUser,
-    updateUser,
     createUser,
+    getUserByEmail,
     getUserById
 };

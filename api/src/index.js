@@ -2,6 +2,7 @@ require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const connectDB = require('./config/db');
 const productRoutes = require('./routes/jocRoutes');
+const userRoutes = require('./routes/usuariRoutes');
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ const startServer = async () => {
 
         // Muntem les rutes després de connectar
         app.use('/api/products', productRoutes);
+        app.use('/api/users', userRoutes);
 
         // Escoltem el port
         const PORT = process.env.PORT || 3000;

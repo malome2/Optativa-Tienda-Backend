@@ -1,4 +1,5 @@
-const userServices = require('../ServicesuserServicess/userServicess');
+const jwt = require('jsonwebtoken');
+const userServices = require('../services/userServices');
 
 const crearUsuari = async (req, res) => {
     try {
@@ -9,32 +10,33 @@ const crearUsuari = async (req, res) => {
     }
 };
 
-const obtenerUsuari = async (req, res) => {
+const loginUsuari = async (req, res) => {
     try {
-        const user = await userServices.getuserById(req.params.id);
-        if (!user) return res.status(404).json({ status: 'error', message: 'Usuari no trobat' });
-        return res.json({ status: 'success', data: user });
-    } catch (err) {
+        const { email, contrasenya } = req.body;
 
-        return res.status(400).json({ status: 'error', message: err.message });
-    }
-};
+        const user = await userServices.getUserByEmail(email);
+        if (!user) return res.status(401).json({ message: 'Credencials incorrectes' });
 
-const modificarUsuari = async (req, res) => {
-    try {
-        const user = await userServices.updateUser(req.params.id, req.body);
-        if (!user) return res.status(404).json({ status: 'error', message: 'Usuari no trobat' });
-        return res.json({ status: 'success', data: user });
-    } catch (err) {
-        return res.status(400).json({ status: 'error', message: err.message });
-    }
-};
+        const valid = await user.compararContrasenya(contrasenya);
+        if (!valid) return res.status(401).json({ message: 'Credencials incorrectes' });
 
-const borrarUsuari = async (req, res) => {
-    try {
-        const user = await userServices.deleteUser(req.params.id);
-        if (!user) return res.status(404).json({ status: 'error', message: 'Usuari no trobat' });
-        return res.json({ status: 'success', message: 'Usuari eliminat correctament' });
+        const token = jwt.sign(
+            { id: user._id, rol: user.rol },
+            process.env.JWT_SECRET,
+            { expiresIn: '8h' }
+        );
+
+        return res.json({
+            status: 'success',
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                nom: user.nom,
+                rol: user.rol
+            }
+        });
+
     } catch (err) {
         return res.status(400).json({ status: 'error', message: err.message });
     }
@@ -42,7 +44,5 @@ const borrarUsuari = async (req, res) => {
 
 module.exports = {
     crearUsuari,
-    obtenerUsuari,
-    modificarUsuari,
-    borrarUsuari
+    loginUsuari
 };
