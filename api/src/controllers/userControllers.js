@@ -12,23 +12,13 @@ const crearUsuari = async (req, res) => {
 
 const loginUsuari = async (req, res) => {
     try {
-        const { email, contrasenya } = req.body;
+        const { accessToken, refreshToken, user } =
+            await userServices.login(req.body); // <--- aquí enviamos {email, contrasenya}
 
-        const user = await userServices.getUserByEmail(email);
-        if (!user) return res.status(401).json({ message: 'Credencials incorrectes' });
-
-        const valid = await user.compararContrasenya(contrasenya);
-        if (!valid) return res.status(401).json({ message: 'Credencials incorrectes' });
-
-        const token = jwt.sign(
-            { id: user._id, rol: user.rol },
-            process.env.JWT_SECRET,
-            { expiresIn: '8h' }
-        );
-
-        return res.json({
-            status: 'success',
-            token,
+        res.json({
+            status: "success",
+            accessToken,
+            refreshToken,
             user: {
                 id: user._id,
                 email: user.email,
@@ -38,11 +28,23 @@ const loginUsuari = async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).json({ status: 'error', message: err.message });
+        res.status(400).json({ status: "error", message: err.message });
+    }
+};
+
+
+const refreshToken = async (req, res) => {
+    try {
+        const token = req.body.refreshToken;
+        const result = await userServices.refresh(token);
+        res.json(result);
+    } catch (err) {
+        res.status(401).json({ error: err.message });
     }
 };
 
 module.exports = {
     crearUsuari,
-    loginUsuari
+    loginUsuari,
+    refreshToken
 };

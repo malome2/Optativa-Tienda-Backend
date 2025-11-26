@@ -7,7 +7,13 @@ const UsuariSchema = new mongoose.Schema({
   contrasenya: { type: String, required: true, minlength: 6 },
   rol: { type: String, enum: ['client', 'admin'], default: 'client' },
   telefon: { type: String },
-  direccions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Direccio' }]
+  direccions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Direccio' }],
+  refreshTokens: [
+    {
+      token: { type: String},
+      ceatedAt: { type: Date,  default: Date.now}
+    }
+  ]
 }, { timestamps: true });
 
 // HASH de la contrasenya
