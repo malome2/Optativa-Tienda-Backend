@@ -1,22 +1,22 @@
 export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Lógica de login aquí
+    
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-6 py-20">
       <div className="w-full max-w-md">
-        {/* Título */}
+        
         <div className="text-center mb-12">
           <div className="w-12 h-12 mx-auto mb-6 bg-emerald-500/20 border border-emerald-500/40 rotate-45"></div>
           <h1 className="text-3xl font-light mb-2">Bienvenido</h1>
         </div>
 
-        {/* Formulario */}
+        
         <div className="border border-slate-800 bg-slate-900/30 p-8">
           <div className="space-y-6">
-            {/* Email */}
+            
             <div>
               <label htmlFor="email" className="block text-sm text-slate-400 mb-2 font-light">
                 Email
@@ -29,7 +29,7 @@ export default function Login() {
               />
             </div>
 
-            {/* Contraseña */}
+            
             <div>
               <label htmlFor="password" className="block text-sm text-slate-400 mb-2 font-light">
                 Contraseña
@@ -42,7 +42,7 @@ export default function Login() {
               />
             </div>
 
-            {/* Recordar / Olvidé */}
+            
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-slate-400 cursor-pointer">
                 <input 
@@ -56,7 +56,7 @@ export default function Login() {
               </a>
             </div>
 
-            {/* Botón */}
+            
             <button
               onClick={handleSubmit}
               className="w-full py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition text-sm tracking-wider"
@@ -65,7 +65,7 @@ export default function Login() {
             </button>
           </div>
 
-          {/* Divisor */}
+          
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-slate-800"></div>
@@ -75,7 +75,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Login Social */}
+          
           <div className="grid grid-cols-2 gap-4">
             <button className="py-3 border border-slate-800 hover:border-emerald-500/30 transition text-sm text-slate-400 hover:text-emerald-400 flex items-center justify-center gap-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -95,7 +95,7 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Registro */}
+        
         <p className="text-center mt-8 text-sm text-slate-400">
           ¿No tienes cuenta?{' '}
           <a href="/register" className="text-emerald-400 hover:text-emerald-300 transition">
