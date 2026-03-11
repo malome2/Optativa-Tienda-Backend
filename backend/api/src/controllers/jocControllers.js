@@ -13,6 +13,7 @@ const obtenerJocs = async (req, res) => {
     try {
         const filter = {};
         if (req.query.categoria) filter.categoria = req.query.categoria;
+        if (req.query.search) filter.titol = { $regex: req.query.search, $options: 'i' };
         if (req.query.minPrice) filter.preu = { $gte: Number(req.query.minPrice) };
         if (req.query.maxPrice) {
             filter.preu = filter.preu || {};
