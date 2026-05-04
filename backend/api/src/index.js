@@ -6,6 +6,11 @@ const productRoutes = require('./routes/jocRoutes');
 const userRoutes = require('./routes/usuariRoutes');
 const carritoRoutes = require('./routes/carritoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
+const checkoutRoutes = require('./routes/checkoutRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+const { stripeWebhook } = require('./controllers/checkoutController');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
 
 const app = express();
 
@@ -14,6 +19,9 @@ app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true
 }));
+
+// El webhook de Stripe necessita el body sense parsejar — ha d'anar ABANS de express.json()
+app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 
 app.use(express.json());
 
@@ -26,6 +34,9 @@ const startServer = async () => {
         app.use('/api/users', userRoutes);
         app.use('/api/carrito', carritoRoutes);
         app.use('/api/pedidos', pedidoRoutes);
+        app.use('/api/checkout', checkoutRoutes);
+        app.use('/api/dashboard', dashboardRoutes);
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => console.log(`Servidor escoltant al port ${PORT}`));

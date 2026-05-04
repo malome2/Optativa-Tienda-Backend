@@ -11,6 +11,7 @@ const authMiddleware = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_ACCES_SECRET);
         req.usuariId = decoded.id;
+        req.user = { id: decoded.id, role: decoded.rol };
         next();
     } catch (err) {
         return res.status(401).json({ status: 'error', message: 'Token invàlid o caducat' });

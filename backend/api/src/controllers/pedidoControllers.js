@@ -32,4 +32,21 @@ const getMeusPedidos = async (req, res) => {
     }
 };
 
-module.exports = { checkout, getMeusPedidos };
+const Pedido = require('../models/pedido');
+
+const updateEstat = async (req, res) => {
+    try {
+        const { estat } = req.body;
+        const pedido = await Pedido.findByIdAndUpdate(
+            req.params.id,
+            { estat },
+            { new: true, runValidators: true }
+        );
+        if (!pedido) return res.status(404).json({ status: 'error', message: 'Pedido no trobat' });
+        return res.json({ status: 'success', data: pedido });
+    } catch (err) {
+        return res.status(400).json({ status: 'error', message: err.message });
+    }
+};
+
+module.exports = { checkout, getMeusPedidos, updateEstat };

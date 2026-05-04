@@ -10,8 +10,7 @@ export default function Checkout() {
         pais: "",
         carrer: "",
         pis: "",
-        codiPostal: "",
-        metode: "targeta"
+        codiPostal: ""
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -28,12 +27,11 @@ export default function Checkout() {
         setError(null);
         setLoading(true);
         try {
-            const data = await apiPost("/pedidos/checkout", form, token);
-            if (data.status === "success") {
-                clearCart();
-                navigate("/checkout/success", { state: { pedido: data.data } });
+            const data = await apiPost("/checkout/create-session", form, token);
+            if (data.status === "success" && data.url) {
+                window.location.href = data.url;
             } else {
-                setError(data.message || "Error en finalitzar la comanda");
+                setError(data.message || "Error en crear la sessió de pagament");
             }
         } catch {
             setError("Error de connexió");
@@ -137,44 +135,6 @@ export default function Checkout() {
                                         />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Mètode de pagament */}
-                        <div>
-                            <h2 className="text-xs text-slate-500 uppercase tracking-widest mb-4">Mètode de pagament</h2>
-                            <div className="space-y-2">
-                                {[
-                                    { value: "targeta", label: "Targeta de crèdit / dèbit" },
-                                    { value: "paypal", label: "PayPal" },
-                                    { value: "transferencia", label: "Transferència bancària" }
-                                ].map(opt => (
-                                    <label
-                                        key={opt.value}
-                                        className={`flex items-center gap-3 px-4 py-3 border cursor-pointer transition ${
-                                            form.metode === opt.value
-                                                ? "border-emerald-500/40 bg-emerald-500/5 text-slate-200"
-                                                : "border-slate-800 text-slate-400 hover:border-slate-700"
-                                        }`}
-                                    >
-                                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                                            form.metode === opt.value ? "border-emerald-400" : "border-slate-600"
-                                        }`}>
-                                            {form.metode === opt.value && (
-                                                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                                            )}
-                                        </div>
-                                        <input
-                                            type="radio"
-                                            name="metode"
-                                            value={opt.value}
-                                            checked={form.metode === opt.value}
-                                            onChange={handleChange}
-                                            className="sr-only"
-                                        />
-                                        <span className="text-sm">{opt.label}</span>
-                                    </label>
-                                ))}
                             </div>
                         </div>
 

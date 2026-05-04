@@ -132,7 +132,10 @@ export default function App() {
                     <div className="flex items-center gap-4">
                         {user ? (
                             <>
-                                <span className="text-sm text-slate-400 hidden md:block">{user.nom}</span>
+                                <Link to="/dashboard" className="text-sm text-slate-400 hover:text-emerald-400 transition hidden md:block">{user.nom}</Link>
+                                {user.rol === "admin" && (
+                                    <Link to="/dashboard/admin" className="text-xs text-emerald-500/70 hover:text-emerald-400 transition hidden md:block tracking-wider">ADMIN</Link>
+                                )}
                                 <button onClick={logout} className="text-slate-400 hover:text-red-400 transition text-sm">
                                     Salir
                                 </button>

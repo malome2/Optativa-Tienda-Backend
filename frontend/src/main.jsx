@@ -9,6 +9,9 @@ import Catalog from "./pages/Catalog";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
+import CheckoutCancel from "./pages/CheckoutCancel";
+import DashboardUsuari from "./pages/DashboardUsuari";
+import DashboardAdmin from "./pages/DashboardAdmin";
 import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 
@@ -25,6 +28,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="product/:id" element={<ProductDetail />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="checkout/success" element={<CheckoutSuccess />} />
+            <Route path="checkout/cancel" element={<CheckoutCancel />} />
+            <Route path="dashboard" element={<DashboardUsuari />} />
+            <Route path="dashboard/admin" element={<DashboardAdmin />} />
           </Route>
         </Routes>
       </BrowserRouter>

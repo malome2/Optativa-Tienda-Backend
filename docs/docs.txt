@@ -1,0 +1,203 @@
+Sessió 17
+Desenvolupament Web Full Stack (React, Node, Mongo)
+Curs 2025-2026
+Pràctica: E-commerce. Sessió 17
+1. Dates..............................................................................................................................3
+2. Objectius........................................................................................................................ 3
+3. Feina prèvia abans de la sessió.....................................................................................3
+4. Feina durant la sessió i abans de la següent sessió......................................................3
+4.1 Flux de checkout (frontend)....................................................................................4
+4.2 Creació de comanda al backend............................................................................4
+4.3 Integració amb Stripe (backend)............................................................................ 5
+4.4 Integració amb Stripe (frontend).............................................................................5
+4.5 Confirmació de pagament (Webhook)....................................................................6
+4.6 Validacions i gestió d’errors....................................................................................6
+4.7 Sandbox i test de pagaments.................................................................................6
+Referències........................................................................................................................ 7
+Apèndixs.............................................................................................................................7
+A. Possible estructura recomanada del backend......................................................... 7
+B. Bones pràctiques..................................................................................................... 7
+C. Errors comuns......................................................................................................... 7
+Lliurable de la Sessió 17.................................................................................................... 7
+1. Dates
+● 13/04 - 20/04
+2. Objectius
+Pes Preferent? Funcionalitat
+0,4 ✓ Implementar flux de checkout complet
+(frontend + backend)
+0,3 ✓ Integrar pagaments amb Stripe (sandbox)
+0,2 ✓ Validacions i gestió d’errors en el procés de
+compra
+0,1 ✓ Confirmació de comandes i persistència
+3. Feina prèvia abans de la sessió
+Tenir:
+- Autenticació (JWT + RBAC)
+- Models: Product, User, Order
+Crear compte a Stripe
+Llegir què és una passarel·la de pagament
+4. Feina durant la sessió i abans de la següent sessió
+4.1 Flux de checkout (frontend)
+Implementar el flux:
+1. Carret
+2. Dades d’enviament
+3. Resum comanda
+4. Pagament
+Pantalles mínimes:
+● /cart
+● /checkout
+● /checkout/success
+● /checkout/cancel
+Validacions:
+● Carret no buit
+● Camps obligatoris (nom, adreça, etc.)
+● Stock disponible
+4.2 Creació de comanda al backend
+Endpoint:
+POST /api/orders
+Funcionalitat:
+Crear comanda mínim amb:
+- usuari
+- productes
+- total
+- estat = "pending"
+Exemple:
+const order = new Order({
+user: req.user.userId,
+products,
+total,
+status: "pending"
+});
+4.3 Integració amb Stripe (backend)
+Instal·lar:
+npm install stripe
+Crear endpoint:
+POST /api/checkout/create-session
+Exemple:
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const session = await stripe.checkout.sessions.create({
+payment_method_types: ['card'],
+line_items: products.map(p => ({
+price_data: {
+currency: 'eur',
+product_data: {
+name: p.name
+},
+unit_amount: p.price * 100
+},
+quantity: p.quantity
+})),
+mode: 'payment',
+success_url: 'http://localhost:5173/checkout/success',
+cancel_url: 'http://localhost:5173/checkout/cancel'
+});
+Retornar:
+session.id
+4.4 Integració amb Stripe (frontend)
+Instal·lar:
+npm install @stripe/stripe-js
+Redirigir a Stripe:
+const stripe = await loadStripe("PUBLIC_KEY");
+await stripe.redirectToCheckout({
+sessionId: sessionId
+});
+4.5 Confirmació de pagament (Webhook)
+Crear endpoint:
+POST /api/checkout/webhook
+Funció:
+- Stripe notifica el pagament
+- Actualitzar comanda:
+status = "paid"
+Important:
+- Validar signature de Stripe
+- No confiar només en frontend
+4.6 Validacions i gestió d’errors
+Validar:
+- Productes existeixen
+- Preus correctes (no confiar en frontend)
+- Stock disponible
+Errors comuns:
+- Sessió Stripe fallida
+- Pagament cancel·lat
+- Timeout
+Resposta backend:
+res.status(400).json({ message: "Error en el pagament" });
+4.7 Sandbox i test de pagaments
+Utilitzar targetes de test de Stripe:
+4242 4242 4242 4242
+Altres casos:
+- Error pagament
+- Targeta rebutjada
+Referències
+● Stripe Docs
+https://stripe.com/docs
+● Stripe Checkout
+https://stripe.com/docs/checkout
+● Stripe Testing
+https://stripe.com/docs/testing
+Apèndixs
+A. Possible estructura recomanada del backend
+src
+├── controllers
+│ checkoutController.js
+│
+├── routes
+│ checkoutRoutes.js
+│
+├── models
+│ Order.js
+B. Bones pràctiques
+- No guardar dades sensibles de targetes
+- Validar sempre al backen
+- Utilitzar webhooks per confirmació real
+- Separar entorn test i producció
+C. Errors comuns
+- Confiar en el frontend per preus ❌
+- No validar webhook ❌
+- No gestionar cancel·lacions ❌
+- No guardar estat de la comanda ❌
+Lliurable de la Sessió 17
+PDF amb totes les explicacions i link a GitHub.
+
+
+Sessió 18
+Desenvolupament Web Full Stack (React, Node, Mongo)
+Curs 2025-2026
+Pràctica: E-commerce. Sessió 18
+1. Dates....................................................................................................................................3
+2. Objectius.............................................................................................................................. 3
+3. Feina prèvia abans de la sessió...........................................................................................3
+4. Feina durant la sessió i abans de la següent sessió............................................................3
+4.1 Crear un dashboard per usuaris...................................................................................3
+4.2 Crear un dashboard per admin.................................................................................... 3
+Referències.............................................................................................................................. 4
+Apèndixs.................................................................................................................................. 4
+A. Errors comuns................................................................................................................4
+Lliurable de la Sessió 18.......................................................................................................... 4
+1. Dates
+● 22/04 - 29/04
+2. Objectius
+Pes Preferent? Funcionalitat
+0,5 ✓ Dashboard usuari
+0,5 ✓ Dashboard admin
+3. Feina prèvia abans de la sessió
+Tenir:
+- Autenticació (JWT + RBAC)
+- Models: Product, User, Order
+4. Feina durant la sessió i abans de la següent sessió
+4.1 Crear un dashboard per usuaris
+Implementar el dashboard d’usuaris:
+1. Fer una proposta d'elements que ha de tenir (gestió d’usuari, compres fetes, …)
+2. Portegir ruta per només poder accedir amb l’usuari
+4.2 Crear un dashboard per admin
+Implementar el dashboard d’administradors:
+3. Fer una proposta d'elements que ha de tenir (gestió d’usuari, gestio d’usuaris,
+grafics, …)
+4. Portegir ruta per només poder accedir amb administrador
+Referències
+● Chart JS
+https://www.chartjs.org/
+Apèndixs
+A. Errors comuns
+- No protegir les 2 parts y que amb un token puguin accedir a tots els llocs.
+Lliurable de la Sessió 18
+PDF amb totes les explicacions i link a GitHub.

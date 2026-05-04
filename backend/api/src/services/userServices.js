@@ -11,7 +11,7 @@ const login = async (data) => {
     const valid = await user.compararContrasenya(contrasenya);
     if (!valid) throw new Error("Email o contrasenya incorrectes");
 
-    const { accessToken, refreshToken } = generarTokens(user._id);
+    const { accessToken, refreshToken } = generarTokens(user._id, user.rol);
 
     user.refreshTokens.push({ token: refreshToken });
     await user.save();
@@ -31,7 +31,7 @@ const refresh = async (refreshToken) => {
 
     user.refreshTokens = user.refreshTokens.filter(t => t.token !== refreshToken);
 
-    const { accessToken, refreshToken: nouRefresh } = generarTokens(user._id);
+    const { accessToken, refreshToken: nouRefresh } = generarTokens(user._id, user.rol);
 
     user.refreshTokens.push({ token: nouRefresh });
     await user.save();
@@ -52,6 +52,14 @@ const createUser = async (data) => {
     return await user.save();
 };
 
+const logout = async (refreshToken) => {
+    const user = await Usuari.findOne({ "refreshTokens.token": refreshToken });
+    if (!user) throw new Error("Refresh token no registrat");
+
+    user.refreshTokens = user.refreshTokens.filter(t => t.token !== refreshToken);
+    await user.save();
+};
+
 const getUserByEmail = async (email) => {
     return await Usuari.findOne({ email });
 };
@@ -60,10 +68,27 @@ const getUserById = async (id) => {
     return await Usuari.findById(id).select('-contrasenya');
 };
 
+const updateUser = async (id, data) => {
+    const allowed = {};
+    if (data.nom !== undefined) allowed.nom = data.nom;
+    if (data.email !== undefined) allowed.email = data.email;
+    if (data.telefon !== undefined) allowed.telefon = data.telefon;
+    if (data.rol !== undefined) allowed.rol = data.rol;
+    return await Usuari.findByIdAndUpdate(id, allowed, { new: true, runValidators: true })
+        .select('-contrasenya -refreshTokens');
+};
+
+const deleteUser = async (id) => {
+    return await Usuari.findByIdAndDelete(id);
+};
+
 module.exports = {
     login,
     refresh,
+    logout,
     createUser,
     getUserByEmail,
-    getUserById
+    getUserById,
+    updateUser,
+    deleteUser
 };

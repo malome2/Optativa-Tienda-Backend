@@ -1,9 +1,26 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth, apiGet } from "../context/AuthContext";
 
 export default function CheckoutSuccess() {
-    const { state } = useLocation();
     const navigate = useNavigate();
-    const pedido = state?.pedido;
+    const [searchParams] = useSearchParams();
+    const { token, clearCart } = useAuth();
+    const [pedido, setPedido] = useState(null);
+
+    useEffect(() => {
+        const sessionId = searchParams.get("session_id");
+        if (!sessionId || !token) {
+            clearCart();
+            return;
+        }
+        apiGet(`/checkout/session/${sessionId}`, token).then(data => {
+            if (data.status === "success") {
+                setPedido(data.data);
+                clearCart();
+            }
+        });
+    }, [token]);
 
     return (
         <div className="min-h-screen text-slate-100 flex items-center justify-center">

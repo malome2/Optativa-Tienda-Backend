@@ -1,6 +1,36 @@
 const jwt = require('jsonwebtoken');
 const userServices = require('../services/userServices');
 
+const updateMe = async (req, res) => {
+    try {
+        const { nom, email, telefon } = req.body;
+        const user = await userServices.updateUser(req.usuariId, { nom, email, telefon });
+        return res.json({ status: 'success', data: user });
+    } catch (err) {
+        return res.status(400).json({ status: 'error', message: err.message });
+    }
+};
+
+const updateUsuari = async (req, res) => {
+    try {
+        const user = await userServices.updateUser(req.params.id, req.body);
+        if (!user) return res.status(404).json({ status: 'error', message: 'Usuari no trobat' });
+        return res.json({ status: 'success', data: user });
+    } catch (err) {
+        return res.status(400).json({ status: 'error', message: err.message });
+    }
+};
+
+const deleteUsuari = async (req, res) => {
+    try {
+        const user = await userServices.deleteUser(req.params.id);
+        if (!user) return res.status(404).json({ status: 'error', message: 'Usuari no trobat' });
+        return res.json({ status: 'success', message: 'Usuari eliminat correctament' });
+    } catch (err) {
+        return res.status(400).json({ status: 'error', message: err.message });
+    }
+};
+
 const crearUsuari = async (req, res) => {
     try {
         const user = await userServices.createUser(req.body);
@@ -43,8 +73,22 @@ const refreshToken = async (req, res) => {
     }
 };
 
+const logoutUsuari = async (req, res) => {
+    try {
+        const token = req.body.refreshToken;
+        await userServices.logout(token);
+        res.json({ status: 'success', message: 'Sessió tancada' });
+    } catch (err) {
+        res.status(400).json({ status: 'error', message: err.message });
+    }
+};
+
 module.exports = {
     crearUsuari,
     loginUsuari,
-    refreshToken
+    refreshToken,
+    logoutUsuari,
+    updateMe,
+    updateUsuari,
+    deleteUsuari
 };
