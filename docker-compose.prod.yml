@@ -1,0 +1,54 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo-tienda-prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo_data_prod:/data/db
+    networks:
+      - tienda_network
+
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: backend-tienda-prod
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/ecommerce?authSource=admin
+      JWT_ACCES_SECRET: ${JWT_ACCES_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+    depends_on:
+      - mongo
+    networks:
+      - tienda_network
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-tienda-prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - tienda_network
+    restart: always
+
+volumes:
+  mongo_data_prod:
+
+networks:
+  tienda_network:
+    driver: bridge

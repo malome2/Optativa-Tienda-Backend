@@ -43,7 +43,13 @@ const crearUsuari = async (req, res) => {
 const loginUsuari = async (req, res) => {
     try {
         const { accessToken, refreshToken, user } =
-            await userServices.login(req.body); // <--- aquí enviamos {email, contrasenya}
+            await userServices.login(req.body);
+
+        req.log.info({
+            requestId: req.requestId,
+            userId: user._id,
+            email: user.email
+        }, 'User logged in successfully');
 
         res.json({
             status: "success",
@@ -58,10 +64,14 @@ const loginUsuari = async (req, res) => {
         });
 
     } catch (err) {
+        req.log.warn({
+            requestId: req.requestId,
+            email: req.body.email
+        }, 'Invalid login attempt');
+
         res.status(400).json({ status: "error", message: err.message });
     }
 };
-
 
 const refreshToken = async (req, res) => {
     try {
@@ -77,6 +87,12 @@ const logoutUsuari = async (req, res) => {
     try {
         const token = req.body.refreshToken;
         await userServices.logout(token);
+
+        req.log.info({
+            requestId: req.requestId,
+            userId: req.usuariId
+        }, 'User logged out');
+
         res.json({ status: 'success', message: 'Sessió tancada' });
     } catch (err) {
         res.status(400).json({ status: 'error', message: err.message });

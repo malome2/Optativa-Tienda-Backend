@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <title>E-commerce — Presentació</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; color: #1a1a1a; font-size: 14px; }
+
+    .slide {
+      width: 860px;
+      min-height: 480px;
+      margin: 32px auto;
+      background: #fff;
+      padding: 60px 72px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* PORTADA */
+    .slide.cover { text-align: center; background: #1e3a8a; color: #fff; }
+    .cover h1 { font-size: 40px; font-weight: 800; margin-bottom: 12px; }
+    .cover p { font-size: 16px; color: #93c5fd; margin-bottom: 6px; }
+    .cover .author { margin-top: 32px; font-size: 14px; color: #bfdbfe; }
+
+    h2 { font-size: 22px; color: #1e3a8a; margin-bottom: 24px; border-bottom: 2px solid #dbeafe; padding-bottom: 8px; }
+    h3 { font-size: 14px; font-weight: 700; color: #1e40af; margin: 16px 0 6px; }
+    p { color: #374151; line-height: 1.7; margin-bottom: 10px; }
+    ul { padding-left: 20px; color: #374151; }
+    li { margin-bottom: 6px; line-height: 1.6; }
+
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card .icon { font-size: 28px; margin-bottom: 8px; }
+    .card h3 { margin-top: 0; }
+
+    .tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 3px 2px;
+    }
+    .tag.green { background: #dcfce7; color: #166534; }
+    .tag.purple { background: #ede9fe; color: #5b21b6; }
+    .tag.orange { background: #ffedd5; color: #9a3412; }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .flow-box {
+      background: #1e3a8a;
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .flow-arrow { color: #93c5fd; font-size: 20px; }
+
+    .num { font-size: 32px; font-weight: 800; color: #2563eb; }
+    .num-label { font-size: 12px; color: #6b7280; }
+
+    .stats { display: flex; gap: 32px; margin-top: 16px; }
+    .stat { text-align: center; }
+
+    @media print {
+      body { background: #fff; }
+      .slide { box-shadow: none; margin: 0; page-break-after: always; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. PORTADA -->
+  <div class="slide cover">
+    <h1>E-commerce de Videojocs</h1>
+    <p>Aplicació web full stack amb React, Node.js i MongoDB</p>
+    <p>Dockeritzada i preparada per a producció</p>
+    <div class="author">Marcos · Curs 2025–2026</div>
+  </div>
+
+  <!-- 2. STACK TECNOLÒGIC -->
+  <div class="slide">
+    <h2>Stack tecnològic</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="icon">⚛️</div>
+        <h3>Frontend</h3>
+        <span class="tag">React 19</span>
+        <span class="tag">React Router</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">Vite</span>
+        <span class="tag">Stripe.js</span>
+      </div>
+      <div class="card">
+        <div class="icon">🟩</div>
+        <h3>Backend</h3>
+        <span class="tag">Node.js</span>
+        <span class="tag">Express 5</span>
+        <span class="tag">Mongoose</span>
+        <span class="tag">JWT</span>
+        <span class="tag">Stripe API</span>
+        <span class="tag">Pino</span>
+      </div>
+      <div class="card">
+        <div class="icon">🗄️</div>
+        <h3>Infraestructura</h3>
+        <span class="tag green">MongoDB</span>
+        <span class="tag green">Docker</span>
+        <span class="tag green">Docker Compose</span>
+        <span class="tag green">Nginx</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ARQUITECTURA -->
+  <div class="slide">
+    <h2>Arquitectura</h2>
+    <div class="flow">
+      <div class="flow-box">Usuari<br/><small>Navegador</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Frontend<br/><small>React + Vite<br/>port 5173 / Nginx</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Backend<br/><small>Express API REST<br/>port 3000</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">MongoDB<br/><small>Base de dades<br/>port 27017</small></div>
+    </div>
+    <div style="margin-top: 32px;">
+      <h3>Separació d'entorns</h3>
+      <p>
+        <span class="tag orange">docker-compose.dev.yml</span> — hot reload, volums muntats, pino-pretty<br/>
+        <span class="tag purple">docker-compose.prod.yml</span> — imatges multi-stage, Nginx, logs JSON purs
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. FUNCIONALITATS -->
+  <div class="slide">
+    <h2>Funcionalitats principals</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>🔐 Autenticació</h3>
+        <ul>
+          <li>Registre i login d'usuaris</li>
+          <li>JWT amb access token i refresh token</li>
+          <li>Control d'accés per rol (usuari / admin)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🛒 Botiga</h3>
+        <ul>
+          <li>Catàleg de jocs amb filtres i cerca</li>
+          <li>Cistella de la compra per usuari</li>
+          <li>Gestió de comandes i direccions</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>💳 Pagaments</h3>
+        <ul>
+          <li>Integració amb Stripe Checkout</li>
+          <li>Webhook per confirmar pagaments</li>
+          <li>Historial de comandes per usuari</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📊 Administració</h3>
+        <ul>
+          <li>Dashboard d'admin protegit per rol</li>
+          <li>Gestió de productes i usuaris</li>
+          <li>Mètriques de servidor en temps real</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. OBSERVABILITAT -->
+  <div class="slide">
+    <h2>Observabilitat</h2>
+    <p>El backend genera informació estructurada per entendre què passa en temps real.</p>
+    <div class="grid grid-3" style="margin-top: 16px;">
+      <div class="card">
+        <h3>📋 Logs estructurats</h3>
+        <p>Cada petició HTTP genera un log JSON amb mètode, URL, status i temps de resposta.</p>
+      </div>
+      <div class="card">
+        <h3>🔍 Request ID</h3>
+        <p>Cada petició té un identificador únic (UUID) per traçar-la de principi a fi.</p>
+      </div>
+      <div class="card">
+        <h3>❤️ Health & Metrics</h3>
+        <p><code>/api/health</code> — estat de la BD.<br/><code>/api/metrics</code> — memòria i CPU (protegit per admin).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. XIFRES -->
+  <div class="slide">
+    <h2>El projecte en xifres</h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">6</div>
+        <div class="num-label">Models de dades</div>
+      </div>
+      <div class="stat">
+        <div class="num">30+</div>
+        <div class="num-label">Endpoints API</div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="num-label">Contenidors Docker</div>
+      </div>
+      <div class="stat">
+        <div class="num">2</div>
+        <div class="num-label">Entorns (dev / prod)</div>
+      </div>
+    </div>
+    <div style="margin-top: 40px;">
+      <h3>Models de dades</h3>
+      <span class="tag">Usuari</span>
+      <span class="tag">Joc</span>
+      <span class="tag">Carrito</span>
+      <span class="tag">Pedido</span>
+      <span class="tag">Direccio</span>
+      <span class="tag">Pagament</span>
+    </div>
+  </div>
+
+</body>
+</html>

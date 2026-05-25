@@ -34,7 +34,7 @@ const createStripeSession = async (req, res) => {
         });
 
         const direccio = await Direccio.create({ pais, carrer, pis, codiPostal, usuari: req.usuariId });
-        await Pedido.create({
+        const pedido = await Pedido.create({
             usuari: req.usuariId,
             direccio: direccio._id,
             total: parseFloat(total.toFixed(2)),
@@ -42,8 +42,20 @@ const createStripeSession = async (req, res) => {
             stripeSessionId: session.id
         });
 
+        req.log.info({
+            requestId: req.requestId,
+            orderId: pedido._id,
+            userId: req.usuariId,
+            total: pedido.total
+        }, 'Order created, Stripe session initiated');
+
         return res.json({ status: 'success', sessionId: session.id, url: session.url });
     } catch (err) {
+        req.log.error({
+            requestId: req.requestId,
+            userId: req.usuariId,
+            error: err.message
+        }, 'Payment session creation failed');
         return res.status(500).json({ status: 'error', message: err.message });
     }
 };
@@ -66,6 +78,7 @@ const stripeWebhook = async (req, res) => {
         );
         if (pedido) {
             await Carrito.findOneAndUpdate({ usuari: pedido.usuari }, { jocs: [] });
+            console.log(`Payment confirmed for order ${pedido._id}`);
         }
     }
 
@@ -94,6 +107,11 @@ const getSessionStatus = async (req, res) => {
 
         return res.json({ status: 'success', data: pedido });
     } catch (err) {
+        req.log.error({
+            requestId: req.requestId,
+            userId: req.usuariId,
+            error: err.message
+        }, 'Payment failed');
         return res.status(500).json({ status: 'error', message: err.message });
     }
 };

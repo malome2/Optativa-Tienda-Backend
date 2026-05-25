@@ -1,0 +1,58 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo-tienda-dev
+    ports:
+      - "27057:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo_data_dev:/data/db
+    networks:
+      - tienda_network
+
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile.dev
+    container_name: backend-tienda-dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: debug
+      MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/ecommerce?authSource=admin
+      JWT_ACCES_SECRET: ${JWT_ACCES_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      FRONTEND_URL: http://localhost:5173
+    volumes:
+      - ./backend/api:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - tienda_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-tienda-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - tienda_network
+
+volumes:
+  mongo_data_dev:
+
+networks:
+  tienda_network:
+    driver: bridge

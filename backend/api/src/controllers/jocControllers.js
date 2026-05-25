@@ -26,9 +26,15 @@ const obtenerJocs = async (req, res) => {
             sort: req.query.sort
         };
 
+        req.log.info({ requestId: req.requestId }, 'Getting product list');
+
         const result = await jocService.getAllJocs(filter, options);
         return res.json({ status: 'success', ...result });
     } catch (err) {
+        req.log.error({
+            requestId: req.requestId,
+            error: err.message
+        }, 'Error getting products');
         return res.status(500).json({ status: 'error', message: err.message });
     }
 };
@@ -39,7 +45,10 @@ const obtenerJoc = async (req, res) => {
         if (!joc) return res.status(404).json({ status: 'error', message: 'Joc no trobat' });
         return res.json({ status: 'success', data: joc });
     } catch (err) {
-        
+        req.log.error({
+            requestId: req.requestId,
+            error: err.message
+        }, 'Error getting product');
         return res.status(400).json({ status: 'error', message: err.message });
     }
 };
